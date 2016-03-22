@@ -1,3 +1,15 @@
 body {
   color: #303030;
+  font-family: helvetica;
+}
+
+#content {
+  margin: 0 auto;
+  width: 804px;
+}
+
+.chart {
+  border: 2px solid #a0a0a0;
+  height: 600px;
+  width: 800px;
 }
