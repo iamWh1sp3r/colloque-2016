@@ -1,6 +1,8 @@
 (function() {
   "use strict";
 
+  var getData = DataService.animatedBars;
+
   var margin = {top: 20, right: 30, bottom: 30, left: 40},
       width = 800 - margin.left - margin.right,
       height = 600 - margin.top - margin.bottom;
@@ -12,6 +14,7 @@
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
   var x = d3.scale.ordinal()
+    .domain(getData().map(function(d) { return d.id; }))
     .rangeRoundBands([0, width], 0.1);
 
   var y = d3.scale.linear()
@@ -34,5 +37,25 @@
   chart.append("g")
     .attr("class", "y axis")
     .call(yAxis);
+
+  function draw() {
+    var selection = chart.selectAll(".bar")
+      .data(getData(), function(d) { return d.id; });
+
+    selection.transition()
+      .attr("height", function(d) { return height - y(d.value); })
+      .attr("y", function(d) { return y(d.value); });
+
+    selection.enter().append("rect")
+      .attr("class", "bar")
+      .attr("x", function(d) { return x(d.id); })
+      .attr("width", x.rangeBand())
+      .attr("height", function(d) { return height - y(d.value); })
+      .attr("y", function(d) { return y(d.value); });
+
+    setTimeout(draw, 1000);
+  }
+
+  draw();
 
 })();

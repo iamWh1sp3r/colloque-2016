@@ -28,3 +28,7 @@ body {
 .x.axis path {
   display: none;
 }
+
+.bar {
+  fill: #6495ED;
+}
