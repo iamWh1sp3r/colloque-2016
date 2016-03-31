@@ -1,7 +1,7 @@
 (function() {
   "use strict";
 
-  var getData = DataService.animatedBars;
+  var ds = DataService.web(20);
 
   var margin = {top: 20, right: 30, bottom: 30, left: 40},
       width = 800 - margin.left - margin.right,
@@ -14,7 +14,7 @@
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
   var x = d3.scale.ordinal()
-    .domain(getData().map(function(d) { return d.id; }))
+    .domain(ds.fetch().map(function(d) { return d.id; }))
     .rangeRoundBands([0, width], 0.1);
 
   var y = d3.scale.linear()
@@ -40,7 +40,7 @@
 
   function draw() {
     var selection = chart.selectAll(".bar")
-      .data(getData(), function(d) { return d.id; });
+      .data(ds.fetch());
 
     selection.transition()
       .attr("height", function(d) { return height - y(d.value); })
