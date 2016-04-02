@@ -1,14 +1,13 @@
 (function() {
   "use strict";
 
-  var ds = DataService.web(20);
-  var data = ds.fetch();
+  var dataService = DataService.web(20);
 
-  var margin = {top: 20, right: 30, bottom: 30, left: 40},
+  var margin = { top: 20, right: 30, bottom: 30, left: 40 },
       width = 800 - margin.left - margin.right,
       height = 600 - margin.top - margin.bottom;
 
-  var chart = d3.select(".chart").append("svg")
+  var chart = d3.select("#chart").append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
     .append("g")
@@ -22,28 +21,20 @@
     .domain([0, 250])
     .range([height, 0]);
 
-  var xAxis = d3.svg.axis()
-    .scale(x)
-    .orient("bottom");
-
   var yAxis = d3.svg.axis()
     .scale(y)
     .orient("left")
     .ticks(10);
 
   chart.append("g")
-    .attr("class", "x axis")
-    .attr("transform", "translate(0," + height + ")")
-    .call(xAxis);
-
-  chart.append("g")
     .attr("class", "y axis")
     .call(yAxis);
 
-  draw();
+  refresh();
 
-  function draw() {
-    var selection = chart.selectAll(".bar").data(data, function(d) { return d.id; });
+  function draw(data, frequency) {
+    var selection = chart.selectAll(".bar")
+      .data(data, function(d) { return d.id; });
 
     selection.transition()
       .attr("x", function(d, i) { return x(i); });
@@ -60,12 +51,12 @@
 
     selection.exit().transition().attr("width", 0).remove();
 
-    setTimeout(refresh, 1000);
+    setTimeout(refresh, frequency);
   }
 
   function refresh() {
-    console.log("refresh");
-    data = ds.fetch();
-    draw();
+    var data = dataService.fetch();
+    var frequency = document.getElementById("frequency").value;
+    draw(data, frequency);
   }
 })();

@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
 
-  <title>D3.js Animated Bar Chart</title>
+  <title>D3.js Statistiques Web</title>
   <meta name="description" content="reseau action ti colloque 2016">
   <meta name="author" content="François Richard">
 
@@ -14,10 +14,11 @@
 </head>
 
 <body>
-  <div id="content">
-    <h2>Animated Bar Chart</h2>
-    <div class="chart"></div>
+  <div id="chart">
+    <h2>D3.js Statistiques Web</h2>
   </div>
+  <input type="range" id="frequency" name="frequency" min="300" max="1000">
+  <script src="js/margins.js"></script>
   <script src="js/data-service.js"></script>
   <script src="js/animated-bar-chart.js"></script>
 </body>

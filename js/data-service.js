@@ -2,24 +2,6 @@ var DataService = {};
 
 (function() {
 
-  DataService.stock = function(n) {
-    var data;
-
-    return { fetch: fetch };
-
-    function fetch() {
-      if (!data) {
-        data = d3.range(n).map(function(i) { return { id: i + 1 }; });
-      }
-
-      data.forEach(function(d) {
-        d.value = Math.random();
-      });
-
-      return data;
-    }
-  };
-
   DataService.web = function(n) {
     var data = [],
         id = 1;
@@ -27,7 +9,7 @@ var DataService = {};
     return { fetch: fetch };
 
     function fetch() {
-      if (data.length == n - 1) {
+      if (data.length == n) {
         data.shift();
       }
 
@@ -43,7 +25,6 @@ var DataService = {};
 
       return {
         id: id++,
-        date: new Date(),
         hits: hits,
         signups: signups,
         likes: likes,
