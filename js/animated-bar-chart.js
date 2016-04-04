@@ -1,6 +1,7 @@
 (function() {
   "use strict";
 
+  var data;
   var count = 20;
   var keys = ["hits", "signups", "likes"];
   var dataService = DataService.web(count);
@@ -9,7 +10,7 @@
       width = 800 - margin.left - margin.right,
       height = 600 - margin.top - margin.bottom;
 
-  var chart = d3.select("#chart").append("svg")
+  var chart = d3.select("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
     .append("g")
@@ -40,35 +41,28 @@
   window.up = update;
 
   function update() {
-    var data = dataService.fetch();
+    data = dataService.fetch();
 
-    var layers = d3.layout.stack()(keys.map(function(k) {
-      return data.map(function(d, i) {
-        return { k: k, x: i, y: d[k] };
-      });
-    }));
+    var stat = chart.selectAll(".stat")
+      .data(data, function(d) { return d.id; });
 
-    var layer = chart.selectAll(".layer")
-        .data(layers)
-      .enter().append("g")
-        .attr("class", "layer");
+    stat.transition()
+      .attr("transform", statTransform);
 
-    var layerUpdate = layer.selectAll("rect")
-      .data(function(d) { return d; });
+    stat.enter().append("g")
+      .classed("stat", true)
+      .attr("my-id", function(d) { return d.id; })
+      .attr("transform", statTransform);
 
-    layerUpdate
-      .transition()
-        .attr("x", function(d, i) { return x(i); });
-
-    layerUpdate.enter().append("rect")
-        .style("fill", function(d) { return color(d.k); })
-        .attr("x", function(d, i) { return x(i) + x.rangeBand(); })
-        .attr("y", function(d) { return y(d.y + d.y0); })
-        .attr("height", function(d) { return y(d.y0) - y(d.y + d.y0); })
-        .attr("width", 0)
-      .transition()
-        .attr("x", function(d, i) { return x(i); })
-        .attr("width", x.rangeBand());
+    // layerUpdate.enter().append("rect")
+    //     .style("fill", function(d) { return color(d.k); })
+    //     .attr("x", function(d, i) { return x(i) + x.rangeBand(); })
+    //     .attr("y", function(d) { return y(d.y + d.y0); })
+    //     .attr("height", function(d) { return y(d.y0) - y(d.y + d.y0); })
+    //     .attr("width", 0)
+    //   .transition()
+    //     .attr("x", function(d, i) { return x(i); })
+    //     .attr("width", x.rangeBand());
 
     // selection.enter().append("rect")
     //   .attr("class", "bar")
@@ -80,9 +74,14 @@
     //       .attr("x", function(d, i) { return x(i); })
     //       .attr("width", x.rangeBand());
 
-    // selection.exit().transition().attr("width", 0).remove();
+    stat.exit().remove();
 
     //var frequency = document.getElementById("frequency").value;
     //setTimeout(update, frequency);
   }
+
+  function statTransform(d, i) {
+    return "translate(" + x(count + (i - data.length)) + ", 0)";
+  }
+
 })();

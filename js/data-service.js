@@ -3,17 +3,26 @@ var DataService = {};
 (function() {
 
   DataService.web = function(n) {
-    var data, id = 1;
+    var data = [],
+        id = 1;
 
-    return { fetch: fetch };
+    return {
+      fetch: fetch,
+      fill: fill
+    };
 
     function fetch() {
-      if (!data) {
-        data = d3.range(n).map(generate);
-      } else {
+      if (data.length == n) {
         data.shift();
-        data.push(generate());
       }
+
+      data.push(generate());
+
+      return data;
+    }
+
+    function fill() {
+      data = d3.range(n).map(generate);
 
       return data;
     }

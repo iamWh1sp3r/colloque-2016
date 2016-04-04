@@ -3,8 +3,8 @@ body {
   font-family: helvetica;
 }
 
-/* ANIMATED BAR CHART */
-#chart svg {
+/* SVG CHART */
+svg {
   border: 2px solid #a0a0a0;
 }
 
@@ -23,7 +23,7 @@ body {
   fill: #6495ED;
 }
 
-/* STAT WIDGET */
+/* HTML WIDGET */
 .widget {
   color: #ffffff;
   float: left;
