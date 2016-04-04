@@ -4,12 +4,15 @@
   var widget = d3.selectAll(".widget")
     .datum(function() {
       var key = this.classList[1];
-      return DataService[key]();
+      return DataService[key]().fetch();
     });
 
-  var stat = widget.append("h1")
-    .text(0)
-    .transition().duration(1000)
+  var delay = 300;
+  var height = widget.node().clientHeight;
+
+  widget.append("h1").transition()
+    .duration(1000)
+    .delay(function(d, i) { return i * delay; })
       .tween("text", function(d) {
         var i = d3.interpolate(0, d.value);
         return function(t) {
@@ -17,16 +20,25 @@
         };
       });
 
-  var target = widget.append("div")
+  widget.insert("div", "h5")
     .classed("target", true)
-    .style("width", 0)
+    .style("height", 0)
+    .style("margin-top", height + "px")
     .attr("title", function(d) {
       return "Objectif: " + d.format(d.target);
     })
-    .transition().duration(1000)
-      .style("width", function(d) {
-        var x0 = d.value;
-        var x1 = d3.max([d.value, d.target]);
-        return (x0 * 100 / x1) + "%";
+    .transition()
+    .duration(1000)
+    .delay(function(d, i) { return i * delay; })
+      .style("height", function(d) {
+        return ratingToHeight(d.value, d.target) + "px";
+      })
+      .style("margin-top", function(d) {
+        return (height - ratingToHeight(d.value, d.target)) + "px";
       });
+
+  function ratingToHeight(value, target) {
+    target = Math.max(value, target);
+    return (value * height / target);
+  }
 })();
