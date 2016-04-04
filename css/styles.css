@@ -3,6 +3,7 @@ body {
   font-family: helvetica;
 }
 
+/* ANIMATED BAR CHART */
 #chart svg {
   border: 2px solid #a0a0a0;
 }
@@ -20,4 +21,34 @@ body {
 
 .bar {
   fill: #6495ED;
+}
+
+/* STAT WIDGET */
+.widget {
+  color: #ffffff;
+  float: left;
+  margin-right: 40px;
+  width: 200px;
+}
+.widget.customers { background-color: #00bcd4; }
+.widget.sales     { background-color: #8bc34a; }
+.widget.rating    { background-color: #ff9800; }
+
+.widget h5 {
+  margin: 0;
+  padding: 10px 10px 0 10px;
+}
+
+.widget h1 {
+  margin: 0;
+  padding: 0 10px 10px 10px;
+}
+
+.widget h1 {
+  margin: 0;
+}
+
+.widget .target {
+  background-color: rgba(0, 0, 0, 0.2);
+  height: 10px;
 }
