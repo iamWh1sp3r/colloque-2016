@@ -2,7 +2,7 @@
   "use strict";
 
   var data;
-  var count = 20;
+  var count = 15;
   var keys = ["hits", "signups", "likes"];
   var dataService = DataService.web(count);
 
@@ -10,7 +10,7 @@
       width = 800 - margin.left - margin.right,
       height = 600 - margin.top - margin.bottom;
 
-  var chart = d3.select("svg")
+  var svg = d3.select("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
     .append("g")
@@ -33,51 +33,51 @@
     .orient("left")
     .ticks(10);
 
-  chart.append("g")
+  svg.append("g")
     .attr("class", "y axis")
     .call(yAxis);
 
-  update();
-  window.up = update;
-
-  function update() {
+  (function update() {
     data = dataService.fetch();
+    var stat = svg.selectAll(".stat").data(data, function(d) { return d.id; });
 
-    var stat = chart.selectAll(".stat")
-      .data(data, function(d) { return d.id; });
+    // UPDATE
+    stat.transition().attr("transform", statTransform);
 
-    stat.transition()
-      .attr("transform", statTransform);
-
+    // ENTER
     stat.enter().append("g")
-      .classed("stat", true)
-      .attr("my-id", function(d) { return d.id; })
-      .attr("transform", statTransform);
+        .attr("class", "stat")
+        .attr("transform", statTransform)
+      .selectAll("rect")
+        .data(rectData)
+      .enter().append("rect")
+        .attr("width", 0)
+        .attr("height", function(d) { return y(d.y0) - y(d.y1); })
+        .attr("x", x.rangeBand())
+        .attr("y", function(d) { return y(d.y1); })
+        .style("fill", function(d) { return color(d.name); })
+      .transition()
+        .attr("width", x.rangeBand())
+        .attr("x", 0);
 
-    // layerUpdate.enter().append("rect")
-    //     .style("fill", function(d) { return color(d.k); })
-    //     .attr("x", function(d, i) { return x(i) + x.rangeBand(); })
-    //     .attr("y", function(d) { return y(d.y + d.y0); })
-    //     .attr("height", function(d) { return y(d.y0) - y(d.y + d.y0); })
-    //     .attr("width", 0)
-    //   .transition()
-    //     .attr("x", function(d, i) { return x(i); })
-    //     .attr("width", x.rangeBand());
+    // ENTER + UPDATE
 
-    // selection.enter().append("rect")
-    //   .attr("class", "bar")
-    //   .attr("x", function(d, i) { return x(i) + x.rangeBand(); })
-    //   .attr("width", 0)
-    //   .attr("height", function(d) { return height - y(d.total); })
-    //   .attr("y", function(d) { return y(d.total); })
-    //     .transition()
-    //       .attr("x", function(d, i) { return x(i); })
-    //       .attr("width", x.rangeBand());
+    // EXIT
+    stat.exit().selectAll("rect")
+      .transition().attr("width", 0);
+    stat.exit()
+      .transition().remove();
 
-    stat.exit().remove();
+    setTimeout(update, frequency());
+  })();
 
-    //var frequency = document.getElementById("frequency").value;
-    //setTimeout(update, frequency);
+  function rectData(d) {
+    var y0 = 0;
+    return color.domain().map(function(name) { return { name: name, y0: y0, y1: y0 += +d[name] }; });
+  }
+
+  function frequency() {
+    return document.getElementById("frequency").value;
   }
 
   function statTransform(d, i) {
