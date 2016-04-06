@@ -70,12 +70,8 @@
     // ENTER + UPDATE
 
     // EXIT
-    bar.exit().selectAll("rect")
-      .transition()
-        .attr("width", 0);
-    bar.exit()
-      .transition()
-        .remove();
+    bar.exit().selectAll("rect").transition().attr("width", 0);
+    bar.exit().transition().remove();
   }
 
   function rectData(d) {
