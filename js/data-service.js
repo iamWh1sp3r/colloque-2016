@@ -7,8 +7,10 @@ var DataService = {};
         id = 1;
 
     return {
+      count: function() { return data.length; },
       fetch: fetch,
-      fill: fill
+      keys: function() { return ["hits", "signups", "likes"]; },
+      size: function() { return n; }
     };
 
     function fetch() {
@@ -21,12 +23,7 @@ var DataService = {};
       return data;
     }
 
-    function fill() {
-      data = d3.range(n).map(generate);
-
-      return data;
-    }
-
+    // private
     function generate() {
       var hits = chance.integer({ min: 30, max: 150 });
       var signups = chance.integer({ min: 0, max: 25 });
@@ -42,6 +39,7 @@ var DataService = {};
     }
   };
 
+
   DataService.customers = function() {
     return { fetch: fetch };
 
@@ -54,6 +52,7 @@ var DataService = {};
     }
   };
 
+
   DataService.sales = function() {
     return { fetch: fetch };
 
@@ -65,6 +64,7 @@ var DataService = {};
       };
     }
   };
+
 
   DataService.rating = function() {
     return { fetch: fetch };

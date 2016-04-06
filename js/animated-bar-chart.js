@@ -1,14 +1,11 @@
 (function() {
   "use strict";
 
-  var data;
-  var count = 15;
-  var keys = ["hits", "signups", "likes"];
-  var dataService = DataService.web(count);
+  var web = DataService.web(30);
 
   var margin = { top: 20, right: 30, bottom: 30, left: 40 },
-      width = 800 - margin.left - margin.right,
-      height = 600 - margin.top - margin.bottom;
+      width = 640 - margin.left - margin.right,
+      height = 480 - margin.top - margin.bottom;
 
   var svg = d3.select("svg")
       .attr("width", width + margin.left + margin.right)
@@ -17,15 +14,14 @@
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
   var color = d3.scale.ordinal()
-    .domain(keys)
+    .domain(web.keys())
     .range(["#4da6ff", "#66ff33", "#ff6666"]);
 
   var x = d3.scale.ordinal()
-    .domain(d3.range(count))
+    .domain(d3.range(web.size()))
     .rangeRoundBands([0, width], 0.1);
 
   var y = d3.scale.linear()
-    .domain([0, 250])
     .range([height, 0]);
 
   var yAxis = d3.svg.axis()
@@ -33,21 +29,32 @@
     .orient("left")
     .ticks(10);
 
-  svg.append("g")
-    .attr("class", "y axis")
-    .call(yAxis);
+  svg.append("g").attr("class", "y axis");
 
-  (function update() {
-    data = dataService.fetch();
-    var stat = svg.selectAll(".stat").data(data, function(d) { return d.id; });
+  setInterval(update, 500);
+
+  ////////////////
+
+  function update() {
+    var data = web.fetch();
+    var bar = svg.selectAll(".bar").data(data, function(d) { return d.id; });
+
+    var max = d3.max(data, function(d) { return d.total; });
+    y.domain([0, max]);
+    var t = svg.transition();
+    t.select(".y.axis").call(yAxis);
 
     // UPDATE
-    stat.transition().attr("transform", statTransform);
+    bar.transition()
+        .attr("transform", barTransform)
+      .selectAll("rect")
+        .attr("height", function(d) { return y(d.y0) - y(d.y1); })
+        .attr("y", function(d) { return y(d.y1); });
 
     // ENTER
-    stat.enter().append("g")
-        .attr("class", "stat")
-        .attr("transform", statTransform)
+    bar.enter().append("g")
+        .attr("class", "bar")
+        .attr("transform", barTransform)
       .selectAll("rect")
         .data(rectData)
       .enter().append("rect")
@@ -55,7 +62,7 @@
         .attr("height", function(d) { return y(d.y0) - y(d.y1); })
         .attr("x", x.rangeBand())
         .attr("y", function(d) { return y(d.y1); })
-        .style("fill", function(d) { return color(d.name); })
+        .style("fill", function(d) { return color(d.key); })
       .transition()
         .attr("width", x.rangeBand())
         .attr("x", 0);
@@ -63,25 +70,22 @@
     // ENTER + UPDATE
 
     // EXIT
-    stat.exit().selectAll("rect")
-      .transition().attr("width", 0);
-    stat.exit()
-      .transition().remove();
-
-    setTimeout(update, frequency());
-  })();
+    bar.exit().selectAll("rect")
+      .transition()
+        .attr("width", 0);
+    bar.exit()
+      .transition()
+        .remove();
+  }
 
   function rectData(d) {
     var y0 = 0;
-    return color.domain().map(function(name) { return { name: name, y0: y0, y1: y0 += +d[name] }; });
+    return color.domain().map(function(key) { return { key: key, y0: y0, y1: y0 += +d[key] }; });
   }
 
-  function frequency() {
-    return document.getElementById("frequency").value;
-  }
-
-  function statTransform(d, i) {
-    return "translate(" + x(count + (i - data.length)) + ", 0)";
+  function barTransform(d, i) {
+    var index = web.size() + i - web.count();
+    return "translate(" + x(index) + ", 0)";
   }
 
 })();
