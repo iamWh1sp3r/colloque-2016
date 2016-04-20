@@ -25,9 +25,9 @@ svg {
 
 /* HTML WIDGET */
 .widget {
+  border-radius: 4px 16px 0 0;
   color: #ffffff;
   float: left;
-  height: 70px;
   margin: 0 30px 20px 0;
   width: 215px;
 }
@@ -37,17 +37,17 @@ svg {
 .widget.rating    { background-color: #ff9800; }
 
 .widget h1 {
+  height: 1em;
   margin: 0;
   padding: 0 10px 10px 10px;
 }
 
 .widget h5 {
   margin: 0;
-  padding: 10px 10px 0 10px;
+  padding: 10px;
 }
 
 .widget .target {
   background-color: rgba(0, 0, 0, 0.17);
-  float: right;
-  width: 30px;
+  height: 8px;
 }
