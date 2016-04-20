@@ -1,6 +1,7 @@
 var DataService = {};
 
 (function() {
+  "use strict";
 
   DataService.web = function(n) {
     var data = [],
@@ -23,7 +24,6 @@ var DataService = {};
       return data;
     }
 
-    // private
     function generate() {
       var hits = chance.integer({ min: 30, max: 150 });
       var signups = chance.integer({ min: 0, max: 25 });
@@ -77,5 +77,4 @@ var DataService = {};
       };
     }
   };
-
 })();

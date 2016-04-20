@@ -1,6 +1,7 @@
 (function() {
   "use strict";
 
+  var paused = false;
   var web = DataService.web(30);
 
   var margin = { top: 20, right: 30, bottom: 30, left: 40 },
@@ -10,6 +11,7 @@
   var svg = d3.select("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
+      .on("mouseout", function() { paused = false; })
     .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -36,6 +38,8 @@
   ////////////////
 
   function update() {
+    if (paused) return;
+
     var data = web.fetch();
     var bar = svg.selectAll(".bar").data(data, function(d) { return d.id; });
 
@@ -55,6 +59,7 @@
     bar.enter().append("g")
         .attr("class", "bar")
         .attr("transform", barTransform)
+        .on("mouseover", function(d, i) { paused = true; })
       .selectAll("rect")
         .data(rectData)
       .enter().append("rect")
@@ -83,5 +88,4 @@
     var index = web.size() + i - web.count();
     return "translate(" + x(index) + ", 0)";
   }
-
 })();

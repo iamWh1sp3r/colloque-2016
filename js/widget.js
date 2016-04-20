@@ -2,11 +2,9 @@
   "use strict";
 
   var delay = 300;
-  var widgets = [
-    { label: "Nouveaux clients", klass: "customers", data: DataService.customers().fetch() },
-    { label: "Ventes mensuelles", klass: "sales", data: DataService.sales().fetch() },
-    { label: "Taux de satisfaction", klass: "rating", data: DataService.rating().fetch() }
-  ];
+  var widgets = [{ label: "Nouveaux clients", klass: "customers", data: DataService.customers().fetch() },
+                 { label: "Ventes mensuelles", klass: "sales", data: DataService.sales().fetch() },
+                 { label: "Taux de satisfaction", klass: "rating", data: DataService.rating().fetch() }];
 
   var widget = d3.selectAll("#widgets").selectAll(".widget")
       .data(widgets)

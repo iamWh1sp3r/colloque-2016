@@ -5,9 +5,15 @@ body {
 
 /* SVG CHART */
 svg {
-  border: 2px solid #a0a0a0;
+  border: 2px solid #d0d0d0;
 }
 
+/* PIE CHART */
+.legend {
+  font-weight: 600;
+}
+
+/* BAR CHART*/
 .axis {
   font: 10px sans-serif;
 }
