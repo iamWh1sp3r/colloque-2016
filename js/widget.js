@@ -30,10 +30,10 @@
       .attr("title", function(d) { return "Objectif: " + d.data.format(d.data.target); })
     .transition().duration(1000)
       .delay(function(d, i) { return i * delay; })
-      .style("width", function(d) { return ratingPct(d.data.value, d.data.target) + "%"; });
+      .style("width", targetPct);
 
-  function ratingPct(value, target) {
-    var max = Math.max(value, target);
-    return (value * 100 / max);
+  function targetPct(d) {
+    var max = Math.max(d.data.value, d.data.target);
+    return (d.data.value * 100 / max) + "%";
   }
 })();

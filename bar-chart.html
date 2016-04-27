@@ -1,0 +1,33 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>D3.js - Selections</title>
+  <meta name="description" content="reseau action ti colloque 2016">
+  <meta name="author" content="François Richard">
+
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/d3.min.js"></script>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+  <h2>D3.js - Diagramme à bandes</h2>
+  <svg></svg>
+
+  <p>
+    Trier par:
+    <label for="sort-by-month"><input type="radio" id="sort-by-month" name="sort" value="month" checked="checked" /> mois</label>
+    <label for="sort-by-amount"><input type="radio" id="sort-by-amount" name="sort" value="amount"/> montant</label>
+  </p>
+  <p>
+    Filtrer sur:
+    <label for="filter-summer"><input type="checkbox" id="filter-summer" name="filter" value="summer"/> été</label>
+    <label for="filter-letter-j"><input type="checkbox" id="filter-letter-j" name="filter" value="j"/> mois débutant par 'J'</label>
+  </p>
+
+  <script src="js/locale.js"></script>
+  <script src="js/bar-chart.js"></script>
+</body>
+</html>

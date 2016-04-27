@@ -25,11 +25,19 @@ svg {
   shape-rendering: crispEdges;
 }
 
-.bar {
-  fill: #6495ED;
+.x.axis path {
+  display: none;
 }
 
-/* HTML WIDGET */
+.bar {
+  fill: steelblue;
+}
+
+.bar:hover {
+  fill: brown;
+}
+
+/* WIDGET */
 .widget {
   border-radius: 4px 16px 0 0;
   color: #ffffff;
