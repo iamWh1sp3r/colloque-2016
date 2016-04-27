@@ -1,4 +1,6 @@
 (function() {
+  "use strict";
+
   var sales = [{ month: 0, label: "Janvier", amount: 96593.09 },
                { month: 1, label: "Février", amount: 91497.40 },
                { month: 2, label: "Mars", amount: 86103.59 },

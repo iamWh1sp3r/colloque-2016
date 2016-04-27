@@ -1,39 +1,37 @@
 (function() {
   "use strict";
 
-  var delay = 300;
-  var widgets = [{ label: "Nouveaux clients", klass: "customers", data: DataService.customers().fetch() },
-                 { label: "Ventes mensuelles", klass: "sales", data: DataService.sales().fetch() },
-                 { label: "Taux de satisfaction", klass: "rating", data: DataService.rating().fetch() }];
+  var widgets = [{ label: "Nouveaux clients", klass: "customers", value: 981, target: 1081, format: d3_locale_frCA.numberFormat("f") },
+                 { label: "Ventes mensuelles", klass: "sales", value: 32540.31, target: 40878.20, format: d3_locale_frCA.numberFormat("$,.2f") },
+                 { label: "Taux de satisfaction", klass: "rating", value: 0.707, target: 0.7, format: d3_locale_frCA.numberFormat(".1%") }];
 
   var widget = d3.selectAll("#widgets").selectAll(".widget")
       .data(widgets)
     .enter().append("div")
-      .attr("class", function(d) { return ["widget", d.klass].join(" "); });
+      .attr("class", classes);
 
   widget.append("h5")
     .text(function(d) { return d.label; });
 
   widget.append("h1")
     .transition().duration(1000)
-      .delay(function(d, i) { return i * delay; })
+      .delay(delay)
       .tween("text", function(d) {
-        var i = d3.interpolate(0, d.data.value);
+        var i = d3.interpolate(0, d.value);
         return function(t) {
-          this.textContent = d.data.format(i(t));
+          this.textContent = d.format(i(t));
         };
       });
 
   widget.append("div")
       .attr("class", "target")
       .style("width", 0)
-      .attr("title", function(d) { return "Objectif: " + d.data.format(d.data.target); })
+      .attr("title", function(d) { return "Objectif: " + d.format(d.target); })
     .transition().duration(1000)
-      .delay(function(d, i) { return i * delay; })
-      .style("width", targetPct);
+      .delay(delay)
+      .style("width", width);
 
-  function targetPct(d) {
-    var max = Math.max(d.data.value, d.data.target);
-    return (d.data.value * 100 / max) + "%";
-  }
+  function classes(d, i) { return ["widget", d.klass].join(" "); }
+  function delay(d, i) { return i * 300; }
+  function width(d) { return (d.value * 100 / Math.max(d.value, d.target)) + "%"; }
 })();
